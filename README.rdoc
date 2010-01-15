@@ -12,13 +12,13 @@ it's dependency (swfobject.js). You'll need to have JQuery and JQueryUI already 
 
 If the installer didn't add the files you can also run this rake task:
 
-rake uploadify_rails:install
+  rake uploadify_rails:install
 
 Next, you need to modify config/initializers/session_store.rb so that it will insert 
 in the provided middleware. Modify the ActionController::Dispatcher so that the FlashSessionCookieMiddleware
 is inbetween the cookie store and the base session, like thus:
 
-ActionController::Dispatcher.middleware.insert_before(ActionController::Session::CookieStore, FlashSessionCookieMiddleware, ActionController::Base.session_options[:key])
+  ActionController::Dispatcher.middleware.insert_before(ActionController::Session::CookieStore, FlashSessionCookieMiddleware, ActionController::Base.session_options[:key])
 
 == Caveat Flash
 
@@ -27,16 +27,16 @@ something like the mime-types gem in order to set the MIME type of the file corr
 
 To install the mime-types gem do the following:
 
-sudo gem install mime-types
+  sudo gem install mime-types
 
 Then in the environment.rb add this to initializer config:
 
-config.gem 'mime-types',  :lib => "mime/types"
+  config.gem 'mime-types',  :lib => "mime/types"
 
 Finally, either in some sort of Model callback or within the controller method you're using 
 to create the file, make sure to set the MIME type using the filename. For example:
 
-@photo.photo_content_type = MIME::Types.type_for(@photo.photo_file_name).to_s
+  @photo.photo_content_type = MIME::Types.type_for(@photo.photo_file_name).to_s
 
 == Usage
 
