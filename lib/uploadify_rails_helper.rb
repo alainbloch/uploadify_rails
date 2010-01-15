@@ -1,21 +1,21 @@
 module UploadifyRailsHelper
   
   def uploadify_options(options = {})
-    @uploadify_options ||= {:dialog_file_description => options[:dialog_file_description] || "Files",
-                            :allowed_extensions      => options[:allowed_extensions] || [:jpg, :jpeg, :gif, :png],
-                            :max_size                => options[:max_size] || 100.megabytes,
-                            :allow_multiple_files    => options[:allow_multiple_files] || true,
-                            :format                  => options[:format] || "json",
-                            :button_text             => options[:button_text] || "Browse",
-                            :cancel_image            => options[:cancel_image] || "/images/cancel.png",
-                            :uploader                => options[:uploader] || '/javascripts/uploadify/uploadify.swf' },
-                            :url                     => options[:url],
-                            :id                      => options[:id]
+    @uploadify_options ||= {:dialog_file_description => "Files",
+                            :allowed_extensions      => [:jpg, :jpeg, :gif, :png],
+                            :max_size                => 100.megabytes,
+                            :allow_multiple_files    => true,
+                            :format                  => "json",
+                            :url                     => nil, # required
+                            :id                      => nil, # required
+                            :button_text             => "Browse",
+                            :cancel_image            => "/images/cancel.png",
+                            :uploader                => '/javascripts/uploadify/uploadify.swf' }.merge(options)
   end
   
-  def javascript_uploadify_tag
+  def javascript_uploadify_tag(options = {})
+    uploadify_options(options) #sets uploadify options
     javascript_tag(%(
-    
     $(document).ready(function() {
       $('##{uploadify_options[:id]}').uploadify({
         uploader      : #{uploadify_options[:uploader]},
@@ -49,11 +49,10 @@ module UploadifyRailsHelper
   end
   
   def render_uploadify(options = {})
-    uploadify_options(options) #sets uploadify options
     javascript_tag("window._token = '#{get_authenticity_token}'") <<
     javascript_include_tag("uploadify/swfobject") << 
     javascript_include_tag("uploadify/jquery.uploadify.v2.1.0.min") <<
-    javascript_uploadify_tag
+    javascript_uploadify_tag(options)
   end
   
   def uploadify_cancel(text = "Cancel", options = {})
@@ -71,6 +70,8 @@ module UploadifyRailsHelper
                $('#uploadify_cancel').show()"
     end
   end
+
+protected  
   
   def get_authenticity_token
     u form_authenticity_token if protect_against_forgery?
