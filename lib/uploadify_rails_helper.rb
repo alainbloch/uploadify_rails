@@ -18,11 +18,11 @@ module UploadifyRailsHelper
     javascript_tag(%(
     $(document).ready(function() {
       $('##{uploadify_options[:id]}').uploadify({
-        uploader      : #{uploadify_options[:uploader]},
+        uploader      : '#{uploadify_options[:uploader]}',
         script        : '#{uploadify_options[:url]}',
         fileDataName  : $('##{uploadify_options[:id]}')[0].name, // Extract correct name of upload field from form field
-        cancelImg     : #{uploadify_options[:cancel_image]},
-        buttonText    : #{uploadify_options[:button_text]},
+        cancelImg     : '#{uploadify_options[:cancel_image]}',
+        buttonText    : '#{uploadify_options[:button_text]}',
         fileDesc      : '#{uploadify_options[:dialog_file_description]} (#{allowed_extensions})',
         fileExt       : '#{allowed_extensions}',
         sizeLimit     : #{uploadify_options[:max_size]},    
