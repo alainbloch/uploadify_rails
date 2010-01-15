@@ -1,9 +1,20 @@
 = UploadifyRails
 
-Drop this into your app to get Uploadify up and running quickly. This plugin solves some of the
-problems with getting Uploadify running in rails such as getting the Authentication Token
-and Session ID into the request. Also, the format is set to JSON, so you can get set some sort
+Uploadify is an javacript library to upload multiple files with neat progress bars and such. UploadifyRails
+allows you to easily get Uploadify up and going without headaches. This plugin solves the major problems in getting Uploadify running in rails. These problems include getting the Authentication Token
+and Session ID into the request sent by the flash object. Also, the request format is set to JSON, so you can get set some sort
 of response when the file(s) is properly uploaded.
+
+== Source Links
+Listed below are the links to various dependencies and the github repository of this plugin.
+
+http://www.uploadify.com/
+
+http://jquery.com/
+
+http://jqueryui.com/
+
+http://github.com/alainbloch/uploadify_rails/
 
 == Installation
 
@@ -14,11 +25,14 @@ If the installer didn't add the files you can also run this rake task:
 
   rake uploadify_rails:install
 
-Next, you need to modify config/initializers/session_store.rb so that it will insert 
-in the provided middleware. Modify the ActionController::Dispatcher so that the FlashSessionCookieMiddleware
-is inbetween the cookie store and the base session, like thus:
+Next, you'll need to modify config/initializers/session_store.rb so that it will insert the provided middleware. Modify the ActionController::Dispatcher so that the FlashSessionCookieMiddleware
+is in-between the cookie store and the base session like this:
 
-  ActionController::Dispatcher.middleware.insert_before(ActionController::Session::CookieStore, FlashSessionCookieMiddleware, ActionController::Base.session_options[:key])
+  ActionController::Dispatcher.middleware.insert_before(
+    ActionController::Session::CookieStore, 
+    FlashSessionCookieMiddleware, # <-- here is where it goes!
+    ActionController::Base.session_options[:key]
+    )
 
 == Caveat Flash
 
@@ -40,25 +54,24 @@ to create the file, make sure to set the MIME type using the filename. For examp
 
 == Usage
 
-Once installed, you'll have some nifty helper methods to easily create uploadify.
+Once installed, you'll have some nifty helper methods to easily add Uploadify.
 
 Use the render_uploadify method to create the uploadify js and load the appropriate js files.
-You can pass in several variables into this method. You'll need to enter in at least the url
-of the path you're uploading the files too, and the id of the file field you are working with.
-
-You will also have a couple helper method to submit the uploadify fields and to cancel any
+You can pass in several options into this method. You'll need to enter in at least the url
+of the path you're uploading the files to, and the id of the file field you are working with.
+You will also have a couple helper methods to submit the uploadify file fields and to cancel any
 queued uploads.
 
-The flash will upload with a JSON format by default.
-
-Refer to the code for specifics. 
+Refer to the code for the default options and what you options you can pass into the methods. 
 
 == Example
 
 Lets say you want to post the files to a photos controller, and you have a file_field 
 with an id "photo_photo":
 
-  <%= render_uploadify(:id  => "photo_photo", :url => photos_path) %>
+  <%= render_uploadify(:id  => "photo_photo", 
+                       :url => photos_path, 
+                       :allow_multiple_files => false) %>
   <div>
     <%= file_field :photo, :photo %>
   </div>
