@@ -58,14 +58,14 @@ Refer to the code for specifics.
 Lets say you want to post the files to a photos controller, and you have a file_field 
 with an id "photo_photo":
 
-<%= render_uploadify(:id  => "photo_photo", :url => photos_path) %>
-<div>
-  <%= file_field :photo, :photo %>
-</div>
-<div id="photo_submit">
-  <%= uploadify_submit("Upload") %>
-  <%= uploadify_cancel("Stop") %>
-</div>
+  <%= render_uploadify(:id  => "photo_photo", :url => photos_path) %>
+  <div>
+    <%= file_field :photo, :photo %>
+  </div>
+  <div id="photo_submit">
+    <%= uploadify_submit("Upload") %>
+    <%= uploadify_cancel("Stop") %>
+  </div>
 
 == Thanks
 
