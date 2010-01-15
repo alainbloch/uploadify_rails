@@ -27,7 +27,13 @@ If the installer didn't add the files you can also run this rake task:
 
 Next, you'll need to modify config/initializers/session_store.rb so that it will insert the provided middleware. Modify the ActionController::Dispatcher so that the FlashSessionCookieMiddleware
 is in-between the cookie store and the base session like this:
-
+  # config/initializers/session_store.rb
+  
+  ActionController::Base.session = {
+    :key         => '_uploadify_rails_session',
+    :secret      => 'woot!'
+  }
+  
   ActionController::Dispatcher.middleware.insert_before(
     ActionController::Session::CookieStore, 
     FlashSessionCookieMiddleware, # <-- here is where it goes!
@@ -44,7 +50,8 @@ To install the mime-types gem do the following:
   sudo gem install mime-types
 
 Then in the environment.rb add this to initializer config:
-
+  # config/environment.rb
+  
   config.gem 'mime-types',  :lib => "mime/types"
 
 Finally, either in some sort of Model callback or within the controller method you're using 
