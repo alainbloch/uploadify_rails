@@ -8,7 +8,7 @@ of response when the file(s) is properly uploaded.
 == Source Links
 Listed below are the links to various dependencies and the github repository of this plugin.
 
-_ http://www.uploadify.com
+- http://www.uploadify.com
 
 - http://jquery.com
 
