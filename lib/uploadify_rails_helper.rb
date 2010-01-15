@@ -1,11 +1,16 @@
 module UploadifyRailsHelper
+  
   def uploadify_options(options = {})
-    @uploadify_options ||= {:dialog_file_description => options[:dialog_file_description] || "Photos",
-                            :allowed_extensions      => options[:allowed_extensions] || Photo::EXTENSIONS,
-                            :max_size                => options[:max_size] || Photo::MAX_SIZE,
+    @uploadify_options ||= {:dialog_file_description => options[:dialog_file_description] || "Files",
+                            :allowed_extensions      => options[:allowed_extensions] || [:jpg, :jpeg, :gif, :png],
+                            :max_size                => options[:max_size] || 100.megabytes,
                             :allow_multiple_files    => options[:allow_multiple_files] || true,
-                            :url                     => options[:url] || photos_path,
-                            :id                      => options[:id] || "photo_photo"}
+                            :format                  => options[:format] || "json",
+                            :button_text             => options[:button_text] || "Browse",
+                            :cancel_image            => options[:cancel_image] || "/images/cancel.png",
+                            :uploader                => options[:uploader] || '/javascripts/uploadify/uploadify.swf' },
+                            :url                     => options[:url],
+                            :id                      => options[:id]
   end
   
   def javascript_uploadify_tag
@@ -13,11 +18,11 @@ module UploadifyRailsHelper
     
     $(document).ready(function() {
       $('##{uploadify_options[:id]}').uploadify({
-        uploader      : '/javascripts/uploadify/uploadify.swf',
-        script        : '#{ uploadify_options[:url] }',
+        uploader      : #{uploadify_options[:uploader]},
+        script        : '#{uploadify_options[:url]}',
         fileDataName  : $('##{uploadify_options[:id]}')[0].name, // Extract correct name of upload field from form field
-        cancelImg     : '/images/cancel.png',
-        buttonText    : 'Browse',
+        cancelImg     : #{uploadify_options[:cancel_image]},
+        buttonText    : #{uploadify_options[:button_text]},
         fileDesc      : '#{uploadify_options[:dialog_file_description]} (#{allowed_extensions})',
         fileExt       : '#{allowed_extensions}',
         sizeLimit     : #{uploadify_options[:max_size]},    
@@ -34,7 +39,7 @@ module UploadifyRailsHelper
           }
         },  
         scriptData  : {
-            'format': 'json', 
+            'format': '#{uploadify_options[:format]}', 
             '#{get_session_key_name}' : encodeURIComponent('#{get_session_key}'),
             'authenticity_token'      : encodeURIComponent('#{get_authenticity_token}')
         }    
