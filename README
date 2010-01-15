@@ -1,0 +1,70 @@
+UploadifyRails
+==============
+Drop this into your app to get Uploadify up and running quickly. This plugin solves some of the
+problems with getting Uploadify running in rails such as getting the Authentication Token
+and Session ID into the request. Also, the format is set to JSON, so you can get set some sort
+of response when the file(s) is properly uploaded.
+
+Installation
+============
+First, the script/plugin installer should've added the supported uploadify js library and
+it's dependency (swfobject.js). You'll need to have JQuery and JQueryUI already installed.
+
+If the installer didn't add the files you can also run this rake task:
+
+rake uploadify_rails:install
+
+Next, you need to modify config/initializers/session_store.rb so that it will insert 
+in the provided middleware. Modify the ActionController::Dispatcher so that the FlashSessionCookieMiddleware
+is inbetween the cookie store and the base session, like thus:
+
+ActionController::Dispatcher.middleware.insert_before(ActionController::Session::CookieStore, FlashSessionCookieMiddleware, ActionController::Base.session_options[:key])
+
+Caveat Flash
+============
+Flash doesn't send the MIME type in the octet stream when uploading. You'll need to use
+something like the mime-types gem in order to set the MIME type of the file correctly.
+
+To install the mime-types gem do the following:
+
+sudo gem install mime-types
+
+Then in the environment.rb add this to initializer config:
+
+config.gem 'mime-types',  :lib => "mime/types"
+
+Finally, either in some sort of Model callback or within the controller method you're using 
+to create the file, make sure to set the MIME type using the filename. For example:
+
+@photo.photo_content_type = MIME::Types.type_for(@photo.photo_file_name).to_s
+
+Usage
+=====
+Once installed, you'll have some nifty helper methods to easily create uploadify.
+
+Use the render_uploadify method to create the uploadify js and load the appropriate js files.
+You can pass in several variables into this method. You'll need to enter in at least the url
+of the path you're uploading the files too, and the id of the file field you are working with.
+
+You will also have a couple helper method to submit the uploadify fields and to cancel any
+queued uploads.
+
+The flash will upload with a JSON format by default.
+
+Refer to the code for specifics. 
+
+Example
+=======
+Lets say you want to post the files to a photos controller, and you have a file_field 
+with an id "photo_photo":
+
+<%= render_uploadify(:id  => "photo_photo", :url => photos_path) %>
+<div>
+  <%= file_field :photo, :photo %>
+</div>
+<div id="photo_submit">
+  <%= uploadify_submit("Upload") %>
+  <%= uploadify_cancel("Stop") %>
+</div>
+
+Copyright (c) 2010 Alain Bloch, released under the MIT license
