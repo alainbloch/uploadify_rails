@@ -25,12 +25,13 @@ module UploadifyRailsHelper
         script        : '#{uploadify_options[:url]}',
         fileDataName  : $('##{uploadify_options[:id]}')[0].name, // Extract correct name of upload field from form field
         cancelImg     : '#{uploadify_options[:cancel_image]}',
+        #{%(buttonImg : '#{uploadify_options[:button_image]}',) if uploadify_options[:button_image]}
         buttonText    : '#{uploadify_options[:button_text]}',
         fileDesc      : '#{uploadify_options[:dialog_file_description]} (#{allowed_extensions})',
         fileExt       : '#{allowed_extensions}',
         sizeLimit     : #{uploadify_options[:max_size]},    
         multi         : #{uploadify_options[:allow_multiple_files] },
-        onComplete    : function(event, queueID, fileObj, response, data) { var data = eval('(' + response + ')');$.getScript(data.photo)},
+        onComplete    : function(event, queueID, fileObj, response, data) { eval(response) },
         onAllComplete : function(event, data){
           $('#uploadify_cancel').hide('blind');
           $('#uploadify_submit').show('blind');      
